@@ -477,6 +477,10 @@
             const playerTileX = Math.floor(player.x) * TILE;
             const playerTileY = Math.floor(player.y) * TILE;
             
+            // DEBUG: red test box
+            ctx.fillStyle = 'red';
+            ctx.fillRect(playerTileX, playerTileY, TILE, TILE);
+            
             // Body
             ctx.fillStyle = '#0ff';
             ctx.fillRect(playerTileX + 4, playerTileY + 2, TILE - 8, TILE - 6);
