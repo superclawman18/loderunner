@@ -424,7 +424,7 @@
             });
         }
         
-        function draw() {
+        function draw() { console.log("player:", player.x, player.y); console.log("enemies:", enemies);
             // Clear
             ctx.fillStyle = '#000';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
