@@ -69,6 +69,14 @@
         .level-complete h2 { color: #0f0; margin-bottom: 10px; }
         .level-complete p { color: #ff0; }
     </style>
+    .dpad { position: fixed; bottom: 20px; left: 20px; display: grid; grid-template-columns: repeat(3, 50px); gap: 5px; }
+    .dpad button { width: 50px; height: 50px; font-size: 24px; background: #333; color: #fff; border: 2px solid #555; border-radius: 8px; }
+    .dpad button:active { background: #0f0; }
+    .action-btns { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; }
+    .action-btns button { width: 70px; height: 50px; font-size: 16px; background: #853; color: #fff; border: 2px solid #a85; border-radius: 8px; }
+    .action-btns button:active { background: #c84; }
+    @media (min-width: 768px) { .dpad, .action-btns { display: none; } }
+
 </head>
 <body>
     <h1>🏃 LODE RUNNER</h1>
@@ -533,13 +541,5 @@
         loadLevel(0);
         gameLoop();
     </script>
-
-    .dpad { position: fixed; bottom: 20px; left: 20px; display: grid; grid-template-columns: repeat(3, 50px); gap: 5px; }
-    .dpad button { width: 50px; height: 50px; font-size: 24px; background: #333; color: #fff; border: 2px solid #555; border-radius: 8px; }
-    .dpad button:active { background: #0f0; }
-    .action-btns { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; }
-    .action-btns button { width: 70px; height: 50px; font-size: 16px; background: #853; color: #fff; border: 2px solid #a85; border-radius: 8px; }
-    .action-btns button:active { background: #c84; }
-    @media (min-width: 768px) { .dpad, .action-btns { display: none; } }
 </body>
 </html>
