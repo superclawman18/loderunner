@@ -424,7 +424,14 @@
             });
         }
         
-        function draw() { console.log("player:", player.x, player.y); console.log("enemies:", enemies);
+        function draw() {
+            // Debug: show keys
+            ctx.fillStyle = '#222';
+            ctx.fillRect(0, 0, 120, 30);
+            ctx.fillStyle = '#0f0';
+            ctx.font = '12px monospace';
+            ctx.fillText('L:' + keys['ArrowLeft'] + ' R:' + keys['ArrowRight'] + ' U:' + keys['ArrowUp'] + ' D:' + keys['ArrowDown'], 5, 20);
+ console.log("player:", player.x, player.y); console.log("enemies:", enemies);
             // Clear
             ctx.fillStyle = '#000';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
