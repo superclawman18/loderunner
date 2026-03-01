@@ -288,7 +288,7 @@
         // Input
         const keys = {};
         document.addEventListener('keydown', e => {
-            keys[e.key] = true;
+            keys[e.key] = true; console.log('key:', e.key);
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'z', 'x', 'Z', 'X'].includes(e.key)) {
                 e.preventDefault();
             }
@@ -473,9 +473,6 @@
                 ctx.strokeRect(d.x * TILE + 2, d.y * TILE + 2, TILE - 4, TILE - 4);
             });
             
-            // DEBUG: red test box
-            ctx.fillStyle = "red";
-            ctx.fillRect(10, 10, 50, 50);
             // Draw player
             const playerTileX = Math.floor(player.x) * TILE;
             const playerTileY = Math.floor(player.y) * TILE;
