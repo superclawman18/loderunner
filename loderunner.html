@@ -292,35 +292,77 @@ class Actor {
 
     draw() {
         if (this.respawnTimer > 0) return;
-        const cx = this.pixelX + TILE/2;
-        const cy = this.pixelY + TILE/2;
+        const cx = this.pixelX;
+        const cy = this.pixelY;
+        
+        // Animation Frame (0 or 1)
+        const isMoving = this.state === 'walk' || this.state === 'climb' || this.state === 'hang';
+        const frame = isMoving ? Math.floor(Date.now() / 150) % 2 : 0;
+        const isRight = this.dir === 1;
 
-        // Color
-        CTX.fillStyle = (this.type === 'hero') ? C.THIEF : C.POLICE;
+        CTX.save();
+        CTX.translate(cx + 10, cy + 10);
+        if (!isRight && this.state !== 'climb') CTX.scale(-1, 1); // Flip for left
+
+        // --- DRAW CHARACTER (Pixel Art Style) ---
+        const isPolice = this.type === 'police';
+        const bodyColor = isPolice ? '#36f' : '#0a0'; // Blue or Green
+        const skinColor = '#fcc';
+        const pantsColor = isPolice ? '#36f' : '#222';
+
+        // 1. Head
+        CTX.fillStyle = skinColor;
+        CTX.fillRect(-3, -8, 6, 6);
         
-        // Body
-        CTX.fillRect(this.pixelX + 4, this.pixelY + 4, 12, 14);
-        
-        // Head
-        CTX.fillStyle = C.SKIN;
-        CTX.fillRect(this.pixelX + 6, this.pixelY, 8, 6);
-        
-        // Hat/Hair
-        if (this.type === 'police') {
-            CTX.fillStyle = '#36f'; // Police Hat
-            CTX.fillRect(this.pixelX + 4, this.pixelY - 2, 12, 4);
+        // Hat / Bandana
+        if (isPolice) {
+            CTX.fillStyle = '#36f'; // Cap
+            CTX.fillRect(-4, -9, 8, 3);
+            CTX.fillStyle = '#fd0'; // Badge
+            CTX.fillRect(-1, -8, 2, 2);
         } else {
-            CTX.fillStyle = '#333'; // Thief Bandana
-            CTX.fillRect(this.pixelX + 6, this.pixelY + 2, 8, 2);
+            CTX.fillStyle = '#f00'; // Red Bandana
+            CTX.fillRect(-3, -8, 6, 2);
         }
 
-        // Animation Leg (Simple)
-        if (this.state === 'walk' || this.state === 'climb') {
-            if (Math.floor(Date.now() / 100) % 2 === 0) {
-                CTX.fillStyle = '#000';
-                CTX.fillRect(this.pixelX + 6, this.pixelY + 14, 4, 4);
+        // 2. Body
+        CTX.fillStyle = bodyColor;
+        CTX.fillRect(-3, -2, 6, 7);
+        
+        // 3. Arms (Swing)
+        CTX.fillStyle = bodyColor;
+        if (this.state === 'climb') {
+            // Climbing arms up/down
+            CTX.fillRect(-6, frame ? -8 : -4, 2, 6);
+            CTX.fillRect(4, frame ? -4 : -8, 2, 6);
+        } else if (this.state === 'hang') {
+            // Hanging arms up
+            CTX.fillRect(-6, -8, 2, 6);
+            CTX.fillRect(4, -8, 2, 6);
+        } else {
+            // Running arms
+            CTX.fillRect(-1, -1, 2, 6); // Shoulder
+            if (isMoving) {
+                CTX.fillRect(frame ? -5 : 2, 0, 3, 3); // Hand swing
             }
         }
+
+        // 4. Legs (Run)
+        CTX.fillStyle = pantsColor;
+        if (this.state === 'climb' || this.state === 'stand' || this.state === 'hang') {
+            CTX.fillRect(-3, 5, 2, 5);
+            CTX.fillRect(1, 5, 2, 5);
+        } else if (this.state === 'walk') {
+            if (frame === 0) {
+                CTX.fillRect(-4, 5, 3, 5); // Left fwd
+                CTX.fillRect(1, 5, 2, 4);  // Right back
+            } else {
+                CTX.fillRect(-2, 5, 2, 4); // Left back
+                CTX.fillRect(2, 5, 3, 5);  // Right fwd
+            }
+        }
+
+        CTX.restore();
     }
 }
 
