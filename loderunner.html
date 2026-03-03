@@ -68,7 +68,8 @@
         </div>
         <div>
             Speed: <input type="range" id="speed-slider" min="1" max="60" value="30"> 
-            <button class="tool-btn" onclick="toggleEditor()">🛠️ Editor Mode</button>
+            <button class="tool-btn" onclick="toggleEditor()">🛠️ Editor</button>
+            <button class="tool-btn" onclick="toggleFullscreen()">📺 Fullscreen</button>
         </div>
     </div>
 
@@ -704,6 +705,14 @@ function testLevel() {
 }
 
 // --- IO ---
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(e => console.log(e));
+    } else {
+        document.exitFullscreen();
+    }
+}
+
 document.getElementById('speed-slider').addEventListener('input', (e) => setSpeed(e.target.value));
 
 window.addEventListener('keydown', e => {
