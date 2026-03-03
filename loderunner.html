@@ -295,70 +295,83 @@ class Actor {
         const cx = this.pixelX;
         const cy = this.pixelY;
         
-        // Animation Frame (0 or 1)
+        // Animation Frame (0-3 for smoother run)
         const isMoving = this.state === 'walk' || this.state === 'climb' || this.state === 'hang';
-        const frame = isMoving ? Math.floor(Date.now() / 150) % 2 : 0;
+        const tick = Math.floor(Date.now() / 100);
+        const frame = isMoving ? tick % 4 : 0;
         const isRight = this.dir === 1;
 
         CTX.save();
         CTX.translate(cx + 10, cy + 10);
         if (!isRight && this.state !== 'climb') CTX.scale(-1, 1); // Flip for left
 
-        // --- DRAW CHARACTER (Pixel Art Style) ---
+        // --- ASSETS ---
         const isPolice = this.type === 'police';
-        const bodyColor = isPolice ? '#36f' : '#0a0'; // Blue or Green
-        const skinColor = '#fcc';
-        const pantsColor = isPolice ? '#36f' : '#222';
-
-        // 1. Head
-        CTX.fillStyle = skinColor;
-        CTX.fillRect(-3, -8, 6, 6);
+        const mainColor = isPolice ? '#36f' : '#fff'; // White for Thief uniform (classic), Blue for Cop
+        const skinColor = '#fba';
         
-        // Hat / Bandana
-        if (isPolice) {
-            CTX.fillStyle = '#36f'; // Cap
-            CTX.fillRect(-4, -9, 8, 3);
-            CTX.fillStyle = '#fd0'; // Badge
-            CTX.fillRect(-1, -8, 2, 2);
+        // 1. LEGS (Moving)
+        CTX.fillStyle = mainColor;
+        if (this.state === 'climb') {
+            // Climbing: legs go up/down
+            CTX.fillRect(-4, 2 + (frame%2)*2, 3, 6); 
+            CTX.fillRect(1, 2 + ((frame+1)%2)*2, 3, 6);
+        } else if (this.state === 'walk') {
+            // Running: scissor legs
+            // Leg 1
+            if (frame === 0 || frame === 3) CTX.fillRect(-5, 4, 3, 6); // Back
+            else CTX.fillRect(-3, 4, 3, 6); // Mid
+            // Leg 2
+            if (frame === 1 || frame === 2) CTX.fillRect(2, 4, 3, 6); // Fwd
+            else CTX.fillRect(0, 4, 3, 6); // Mid
         } else {
-            CTX.fillStyle = '#f00'; // Red Bandana
-            CTX.fillRect(-3, -8, 6, 2);
+            // Stand
+            CTX.fillRect(-3, 4, 2, 6);
+            CTX.fillRect(1, 4, 2, 6);
         }
 
-        // 2. Body
-        CTX.fillStyle = bodyColor;
+        // 2. BODY
+        CTX.fillStyle = isPolice ? '#36f' : '#0a0'; // Green Shirt Thief, Blue Cop
         CTX.fillRect(-3, -2, 6, 7);
-        
-        // 3. Arms (Swing)
-        CTX.fillStyle = bodyColor;
+
+        // 3. HEAD
+        CTX.fillStyle = skinColor;
+        CTX.fillRect(-2, -7, 5, 5);
+        // Face/Nose
+        if (this.state !== 'climb') {
+            CTX.fillStyle = '#fab'; 
+            CTX.fillRect(3, -5, 2, 2); // Nose pointing fwd
+        }
+
+        // 4. HAT / HAIR
+        if (isPolice) {
+            CTX.fillStyle = '#36f'; // Blue Cap
+            CTX.fillRect(-3, -8, 7, 2);
+            CTX.fillRect(-3, -8, 8, 1); // Brim
+        } else {
+            CTX.fillStyle = '#d00'; // Red Bandana
+            CTX.fillRect(-3, -7, 6, 2);
+            CTX.fillRect(-4, -6, 1, 3); // Knot
+        }
+
+        // 5. ARMS
+        CTX.fillStyle = skinColor;
         if (this.state === 'climb') {
-            // Climbing arms up/down
-            CTX.fillRect(-6, frame ? -8 : -4, 2, 6);
-            CTX.fillRect(4, frame ? -4 : -8, 2, 6);
+            CTX.fillRect(-6, -6 + ((frame+1)%2)*3, 2, 6);
+            CTX.fillRect(4, -6 + (frame%2)*3, 2, 6);
         } else if (this.state === 'hang') {
-            // Hanging arms up
-            CTX.fillRect(-6, -8, 2, 6);
-            CTX.fillRect(4, -8, 2, 6);
+            CTX.fillRect(-2, -9, 2, 6); // Hands up
+            CTX.fillRect(2, -9, 2, 6);
         } else {
             // Running arms
-            CTX.fillRect(-1, -1, 2, 6); // Shoulder
+            CTX.fillStyle = isPolice ? '#36f' : '#0a0'; // Sleeves
             if (isMoving) {
-                CTX.fillRect(frame ? -5 : 2, 0, 3, 3); // Hand swing
-            }
-        }
-
-        // 4. Legs (Run)
-        CTX.fillStyle = pantsColor;
-        if (this.state === 'climb' || this.state === 'stand' || this.state === 'hang') {
-            CTX.fillRect(-3, 5, 2, 5);
-            CTX.fillRect(1, 5, 2, 5);
-        } else if (this.state === 'walk') {
-            if (frame === 0) {
-                CTX.fillRect(-4, 5, 3, 5); // Left fwd
-                CTX.fillRect(1, 5, 2, 4);  // Right back
+                CTX.fillRect(-2, -1, 4, 3); // Shoulder
+                // Hand swings opposite to legs usually, simply:
+                CTX.fillRect(frame > 1 ? 3 : -4, 1, 3, 3);
             } else {
-                CTX.fillRect(-2, 5, 2, 4); // Left back
-                CTX.fillRect(2, 5, 3, 5);  // Right fwd
+                CTX.fillRect(-4, 0, 2, 5); // Arms down
+                CTX.fillRect(2, 0, 2, 5);
             }
         }
 
