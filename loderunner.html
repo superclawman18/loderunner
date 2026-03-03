@@ -18,10 +18,11 @@
         .hint { font-size: 0.8rem; color: #888; margin-bottom: 10px; }
         
         /* Editor UI */
-        #editor-panel { display: none; background: #222; padding: 10px; border: 2px solid #555; margin-top: 10px; width: 100%; max-width: 560px; box-sizing: border-box; }
-        .palette { display: flex; gap: 5px; margin-bottom: 10px; flex-wrap: wrap; }
-        .p-btn { width: 30px; height: 30px; border: 2px solid #444; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; }
-        .p-btn.active { border-color: #fff; box-shadow: 0 0 5px #fff; }
+        #editor-panel { display: none; background: #333; padding: 10px; border: 2px solid #666; margin-top: 10px; width: 100%; max-width: 560px; box-sizing: border-box; }
+        .palette { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+        .p-btn { width: 32px; height: 32px; border: 2px solid #555; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: #fff; text-shadow: 1px 1px 0 #000; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .p-btn:hover { transform: translateY(-1px); border-color: #888; }
+        .p-btn.active { border-color: #fff; box-shadow: 0 0 8px #fff; transform: scale(1.1); z-index: 10; }
         .tool-btn { padding: 5px 15px; background: #444; color: #fff; border: none; cursor: pointer; font-family: inherit; }
         .tool-btn:hover { background: #666; }
 
@@ -586,6 +587,8 @@ function initEditor() {
         const btn = document.createElement('div');
         btn.className = 'p-btn';
         btn.style.backgroundColor = tool.c;
+        // Auto-contrast text color
+        btn.style.color = (tool.c === '#000' || tool.c === '#b33') ? '#fff' : '#000';
         btn.innerText = tool.name.substring(0,1);
         btn.onclick = () => {
             editor.selectedTile = tool.id;
