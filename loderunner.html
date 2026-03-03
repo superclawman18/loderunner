@@ -31,7 +31,7 @@
         /* Mobile Controls */
         #mobile-controls { display: none; margin-top: 15px; user-select: none; }
         .dpad-row { display: flex; justify-content: center; gap: 15px; margin: 8px; }
-        .m-btn { width: 60px; height: 60px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; color: #fff; font-size: 24px; touch-action: manipulation; display: flex; align-items: center; justify-content: center; }
+        .m-btn { width: 45px; height: 45px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; color: #fff; font-size: 18px; touch-action: manipulation; display: flex; align-items: center; justify-content: center; }
         .m-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.95); }
         .m-btn.act { border-color: #f55; color: #f55; border-radius: 10px; }
 
@@ -89,16 +89,12 @@
     <!-- Mobile Controls (Above Ads) -->
     <div id="mobile-controls" style="padding-bottom: 20px; z-index:999; position:relative;">
         <div class="dpad-row">
-            <div class="m-btn" id="btn-up">↑</div>
-        </div>
-        <div class="dpad-row">
+            <div class="m-btn act" id="btn-dig-l" style="margin-right:10px;">Z</div>
             <div class="m-btn" id="btn-left">←</div>
+            <div class="m-btn" id="btn-up">↑</div>
             <div class="m-btn" id="btn-down">↓</div>
             <div class="m-btn" id="btn-right">→</div>
-        </div>
-        <div class="dpad-row" style="margin-top:20px">
-            <div class="m-btn act" id="btn-dig-l">Z</div>
-            <div class="m-btn act" id="btn-dig-r">X</div>
+            <div class="m-btn act" id="btn-dig-r" style="margin-left:10px;">X</div>
         </div>
     </div>
 
