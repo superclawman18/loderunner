@@ -121,6 +121,7 @@ let state = {
     levelIdx: 0,
     score: 0, lives: 3,
     map: [], 
+    rawLevel: [], // Keep the clean source level here
     actors: [], // [0]=Hero, [1..]=Police
     holes: [],  // {x, y, time}
     fps: 30,
@@ -408,6 +409,7 @@ function tryDig(actor, dir) {
 // --- CORE FUNCTIONS ---
 function initLevel(levelStrArray) {
     state.map = [];
+    state.rawLevel = [...levelStrArray]; // Clone for editor restore
     state.actors = [];
     state.holes = [];
     
@@ -549,7 +551,20 @@ function updateUI() {
 function toggleEditor() {
     state.mode = state.mode === 'play' ? 'edit' : 'play';
     document.getElementById('editor-panel').style.display = state.mode === 'edit' ? 'block' : 'none';
-    if (state.mode === 'edit') initEditor();
+    
+    if (state.mode === 'edit') {
+        initEditor();
+        // Restore the pristine raw level for editing
+        // We need to reload the map from state.rawLevel, but NOT spawn actors immediately or it gets messy
+        // Actually, easiest is: parse rawLevel back into state.map
+        for (let y = 0; y < ROWS; y++) {
+            const chars = (state.rawLevel[y] || "2".repeat(COLS)).split('');
+            for (let x = 0; x < COLS; x++) {
+                state.map[y][x] = parseInt(chars[x] || 0);
+            }
+        }
+        exportLevel(); // Show code immediately
+    }
 }
 
 function initEditor() {
