@@ -35,7 +35,11 @@
         .m-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.95); }
         .m-btn.act { border-color: #f55; color: #f55; border-radius: 10px; }
 
-        @media (hover: none) { #mobile-controls { display: block; } .hint { display: none; } }
+        @media (hover: none) { 
+            #mobile-controls { display: block; } 
+            .hint { display: none; }
+            .bottom-ad { display: none; } /* Hide bottom ad on mobile to save space for controls */
+        }
     </style>
 </head>
 <body>
@@ -82,13 +86,13 @@
     </div>
 
     <!-- Bottom Ad Placeholder -->
-    <div style="max-width:560px; margin: 10px auto; width:100%; text-align:center;">
+    <div class="bottom-ad" style="max-width:560px; margin: 10px auto; width:100%; text-align:center;">
         <div style="background:#eee; color:#999; height:250px; line-height:250px; border:1px dashed #ccc; font-size:12px;">
             📺 ADVERTISEMENT (Medium Rectangle 300x250)
         </div>
     </div>
 
-    <div id="mobile-controls" style="padding-bottom: 20px;">
+    <div id="mobile-controls" style="padding-bottom: 20px; z-index:999; position:relative;">
         <div class="dpad-row">
             <div class="m-btn" id="btn-up">↑</div>
         </div>
