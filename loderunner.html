@@ -65,7 +65,8 @@
         <div style="color:#aaa; margin-bottom:5px">EDITOR PALETTE:</div>
         <div class="palette" id="palette"></div>
         <div style="display:flex; gap:10px">
-            <button class="tool-btn" onclick="exportLevel()">💾 Export Level to Console</button>
+            <button class="tool-btn" onclick="exportLevel()">💾 Export</button>
+            <button class="tool-btn" onclick="importLevel()">📂 Import Text</button>
             <button class="tool-btn" onclick="clearLevel()">🗑️ Clear</button>
             <button class="tool-btn" onclick="testLevel()">▶️ Test Play</button>
         </div>
@@ -633,15 +634,50 @@ function exportLevel() {
     document.getElementById('export-area').value = txt;
 }
 
+function importLevel() {
+    const txt = document.getElementById('export-area').value.trim();
+    try {
+        const levelData = JSON.parse(txt);
+        state.rawLevel = levelData;
+        // Update editor map
+        for (let y = 0; y < ROWS; y++) {
+            const chars = (levelData[y] || "2".repeat(COLS)).split('');
+            for (let x = 0; x < COLS; x++) {
+                state.map[y][x] = parseInt(chars[x] || 0);
+            }
+        }
+        drawEditor();
+        alert("Level imported from text!");
+    } catch(e) {
+        alert("Invalid level data!");
+    }
+}
+
 function clearLevel() {
     for(let y=0; y<ROWS; y++) for(let x=0; x<COLS; x++) state.map[y][x] = (x===0||x===COLS-1||y===0||y===ROWS-1) ? T.SOLID : T.EMPTY;
 }
 
 function testLevel() {
-    // Re-parse current map to init actors
-    const currentMapStr = [];
-    for(let y=0; y<ROWS; y++) currentMapStr.push(state.map[y].join(''));
-    initLevel(currentMapStr);
+    // 1. Try to read from Export Area first
+    const txt = document.getElementById('export-area').value.trim();
+    let levelData = null;
+    
+    if (txt.startsWith('[')) {
+        try {
+            levelData = JSON.parse(txt);
+            console.log("Loaded level from text area");
+        } catch (e) {
+            console.error("Invalid JSON in text area, using map state instead.");
+        }
+    }
+
+    // 2. If no text, use current map state
+    if (!levelData) {
+        levelData = [];
+        for(let y=0; y<ROWS; y++) levelData.push(state.map[y].join(''));
+    }
+
+    initLevel(levelData);
     toggleEditor();
 }
 
